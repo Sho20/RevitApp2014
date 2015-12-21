@@ -1,0 +1,181 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using Autodesk.Revit.DB;
+using Autodesk.Revit.UI;
+using LocXYZ = Autodesk.Revit.DB.XYZ;
+
+namespace RevitAppIN.Util
+{
+    public static class CableTrayUtil
+    {
+        public static string getObjectID(this Element cObject)
+        {
+            return cObject.Id.ToString();
+        }
+
+        public static string getType(this Element cObject)
+        {
+            return cObject.Category.Name;
+        }
+
+        public static string getType2(this Element cObject)
+        {
+            string returnValue = "Cable Tray";
+            if (cObject.Category.Name == "Cable Tray Fittings")
+            {
+                FamilyInstance obj2 = cObject as FamilyInstance;
+                returnValue = transType(obj2.Symbol.Family.Name);
+            }
+            return returnValue;
+        }
+
+        public static string getWidth(this Element cObject)
+        {
+            string returnValue = "null"; // default value is null.
+
+            if (cObject.Category.Name == "Cable Trays")
+            {
+                returnValue = cObject.get_Parameter("Width").AsValueString();
+            }
+            else if (cObject.Category.Name == "Cable Tray Fittings")
+            {
+                if (cObject.get_Parameter("Tray Width") != null)
+                    returnValue = cObject.get_Parameter("Tray Width").AsValueString();
+                else if (cObject.get_Parameter("Tray Width 1").HasValue)
+                    returnValue = cObject.get_Parameter("Tray Width 1").AsValueString();
+            }
+
+            return returnValue;
+
+        }
+
+        public static string getLength(this Element cObject)
+        {
+
+            string returnValue = "null"; // default value is null.
+
+            if (cObject.Category.Name == "Cable Trays")
+            {
+                returnValue = cObject.get_Parameter("Length").AsValueString();
+            }
+            else if (cObject.Category.Name == "Cable Tray Fittings")
+            {
+                returnValue = cObject.get_Parameter("Tray Length").AsValueString();
+            }
+            return returnValue;
+        }
+
+
+        public static string getHeight(this Element cObject)
+        {
+            try
+            {
+                string returnValue = "null"; // default value is null.
+
+                if (cObject.Category.Name == "Cable Trays")
+                {
+                    returnValue = cObject.get_Parameter("Height").AsValueString();
+                }
+                else if (cObject.Category.Name == "Cable Tray Fittings")
+                {
+                    FamilyInstance obj2 = cObject as FamilyInstance;
+                    if (transType(obj2.Symbol.Family.Name) == "Transition")
+                    {
+                        returnValue = cObject.get_Parameter("Tray Height1").AsValueString();
+                    }
+                    else
+                    {
+                        returnValue = cObject.get_Parameter("Tray Height").AsValueString();
+                    }
+                    
+                }
+                return returnValue;
+            }
+            catch 
+            {
+                FamilyInstance obj2 = cObject as FamilyInstance;
+                TaskDialog.Show("RevitAppIN", obj2.Symbol.Family.Name);
+                return "null";
+            }
+
+
+
+
+            
+        }
+
+        private static string transType(string revitType)
+        {
+            string fittingType = "null";
+            switch (revitType)
+            {
+                case "M_Channel Horizontal Bend":
+                    fittingType = "Elbow";
+                    break;
+                case "M_Channel Vertical Inside Bend":
+                    fittingType = "Vertical Inside Bend";
+                    break;
+                case "M_Channel Vertical Outside Bend":
+                    fittingType = "Vertical Outside Bend";
+                    break;
+                case "M_Channel Horizontal Tee":
+                    fittingType = "Tee";
+                    break;
+                case "M_Channel Horizontal Cross":
+                    fittingType = "Cross";
+                    break;
+                case "M_Channel Reducer":
+                    fittingType = "Transition";
+                    break;
+                case "M_Channel Union":
+                    fittingType = "Union";
+                    break;          
+            }
+            return fittingType;
+        }
+
+        // ====== it shall be changed in each case. =======
+        //private static string transType(string revitType)
+        //{
+        //    string fittingType = "null";
+        //    switch (revitType)
+        //    {
+        //        case "M_Ladder Horizontal Bend":
+        //            fittingType = "Elbow";
+        //            break;
+        //        case "M_Ladder Horizontal Tee":
+        //            fittingType = "Tee";
+        //            break;
+        //        case "M_Ladder Vertical Outside Bend":
+        //            fittingType = "Outside Bend";
+        //            break;
+
+        //        default:
+        //            fittingType = "Cable Tray";
+        //            break;
+        //    }
+
+        //    return fittingType;
+        //}
+
+        /*
+        public static string getLocPt(this Element cObject)
+        {
+            string returnValue = "null";
+            if (cObject.Category.Name == "Cable Trays")
+            {
+                LocXYZ pt = cObject.Location
+
+
+                returnValue = cObject.get_Parameter("Height").AsValueString();
+            }
+
+            return returnValue;
+        }
+        */
+    }
+
+    
+}

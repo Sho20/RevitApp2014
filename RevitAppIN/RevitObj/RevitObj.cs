@@ -28,4 +28,11 @@ namespace RevitAppIN.RevitObj
         public string height { get; set; }
         public string length { get; set; }
     }
+
+    public class TrayTotalLength
+    {
+        public string width { get; set; }
+        public string height { get; set; }
+        public double totalLength { get; set; }
+    }
 }

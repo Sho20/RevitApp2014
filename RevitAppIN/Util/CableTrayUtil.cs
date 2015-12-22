@@ -96,7 +96,7 @@ namespace RevitAppIN.Util
             catch 
             {
                 FamilyInstance obj2 = cObject as FamilyInstance;
-                TaskDialog.Show("RevitAppIN", obj2.Symbol.Family.Name);
+                //TaskDialog.Show("RevitAppIN", obj2.Symbol.Family.Name);
                 return "null";
             }
 

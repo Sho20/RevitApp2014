@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <RevitAddIns>
   <AddIn Type="Command">
-    <Assembly>D:\Programa\RevitAppIN_2014\RevitAppIN\bin\Debug\RevitAppIN.dll</Assembly>
+    <Assembly>D:\GitHub\RevitAppIN_2014\RevitAppIN\bin\Debug\RevitAppIN.dll</Assembly>
     <ClientId>bafb4667-2893-44f6-865c-056cf5e99d6d</ClientId>
     <FullClassName>RevitAppIN.Command</FullClassName>
     <Text>RevitAppIN</Text>

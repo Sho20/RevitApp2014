@@ -112,8 +112,7 @@ namespace RevitAppIN
 
             //***===========================================
             //RevitAppUD.Forms.RevitAppMainForm.
-            string txtForm;
-            txtForm = "test";
+       
             RevitAppIN.RevitObj.RevitObj testobj = new RevitAppIN.RevitObj.RevitObj();
 
             RevitAppIN.Forms.ReportForm testForm = new RevitAppIN.Forms.ReportForm(objs);
@@ -151,9 +150,7 @@ namespace RevitAppIN
             */
 
 
-            string mrk, typ, ele_Id;
-            string Ori_X, Ori_Y, Ori_Z;
-            int count;
+            
 
 
             /*

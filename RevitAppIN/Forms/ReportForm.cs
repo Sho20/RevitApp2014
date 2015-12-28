@@ -51,7 +51,7 @@ namespace RevitAppIN.Forms
 
                 if (ele == null) continue;
                 
-                TrayList.Add(new RevitTray() { objName = ele.getObjectID(), type = ele.getType(), type2 = ele.getType2(), width = ele.getWidth(), height = ele.getHeight(), length = ele.getLength() });
+                TrayList.Add(new RevitTray() { objName = ele.getObjectID(), type = ele.getType(), type2 = ele.getType2(), width = ele.getWidth(), height = ele.getHeight(), length = ele.getLength(), description = ele.getTraySpec() });
                 
             }
 

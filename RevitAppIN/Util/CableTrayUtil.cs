@@ -5,6 +5,7 @@ using System.Text;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
 using LocXYZ = Autodesk.Revit.DB.XYZ;
+using RevitAppIN.RevitObj;
 
 namespace RevitAppIN.Util
 {
@@ -89,11 +90,11 @@ namespace RevitAppIN.Util
                     {
                         returnValue = cObject.get_Parameter("Tray Height").AsValueString();
                     }
-                    
+
                 }
                 return returnValue;
             }
-            catch 
+            catch
             {
                 FamilyInstance obj2 = cObject as FamilyInstance;
                 //TaskDialog.Show("RevitAppIN", obj2.Symbol.Family.Name);
@@ -103,7 +104,7 @@ namespace RevitAppIN.Util
 
 
 
-            
+
         }
 
         private static string transType(string revitType)
@@ -131,9 +132,88 @@ namespace RevitAppIN.Util
                     break;
                 case "M_Channel Union":
                     fittingType = "Union";
-                    break;          
+                    break;
             }
             return fittingType;
+        }
+
+
+
+
+
+
+
+        // Get the description by using this mehtod for now, we should build a database to search from for furture work.
+        public static string getTraySpec(this Element cObject)
+        {
+            string traySpec = "null";
+            if (cObject.getType2() == "Cable Tray")
+            {
+                if (cObject.getWidth() == "600 mm" && cObject.getHeight() == "150 mm")
+                    traySpec = "PUNCH TYPE CABLE TRAY, STRAIGHT WAY, ALUMINUM ALLOY, ANODIZING, 150MM SIDE RAIL, 600 MM";
+                if (cObject.getWidth() == "900 mm" && cObject.getHeight() == "150 mm")
+                    traySpec = "PUNCH TYPE CABLE TRAY, STRAIGHT WAY, ALUMINUM ALLOY, ANODIZING, 150MM SIDE RAIL, 900 MM";
+                if (cObject.getWidth() == "300 mm" && cObject.getHeight() == "150 mm")
+                    traySpec = "PUNCH TYPE CABLE TRAY, STRAIGHT WAY, ALUMINUM ALLOY, ANODIZING, 150MM SIDE RAIL, 300 MM";
+            }
+            if (cObject.getType2() == "Elbow")
+            {
+                if (cObject.getWidth() == "300 mm" && cObject.getHeight() == "150 mm")
+                    traySpec = "PUNCH TYPE CABLE TRAY FITTING, HORIZONTAL BEND, ALUMINUM ALLOY, ANODIZING, 100MM SIDE RAIL, 300MM BEND RADIUS, 90 DEGREE BEND, 300 MM";
+                if (cObject.getWidth() == "600 mm" && cObject.getHeight() == "150 mm")
+                    traySpec = "PUNCH TYPE CABLE TRAY FITTING, HORIZONTAL BEND, ALUMINUM ALLOY, ANODIZING, 100MM SIDE RAIL, 300MM BEND RADIUS, 90 DEGREE BEND, 600 MM";
+                if (cObject.getWidth() == "900 mm" && cObject.getHeight() == "150 mm")
+                    traySpec = "PUNCH TYPE CABLE TRAY FITTING, HORIZONTAL BEND, ALUMINUM ALLOY, ANODIZING, 100MM SIDE RAIL, 300MM BEND RADIUS, 90 DEGREE BEND, 900 MM";
+            }
+            if (cObject.getType2() == "Vertical Inside Bend")
+            {
+                if (cObject.getWidth() == "300 mm" && cObject.getHeight() == "150 mm")
+                    traySpec = "PUNCH TYPE CABLE TRAY FITTING, VERTICAL INSIDE BEND, ALUMINUM ALLOY, ANODIZING, 100MM SIDE RAIL, 300MM BEND RADIUS, 90 DEGREE BEND, 300 MM";
+                if (cObject.getWidth() == "600 mm" && cObject.getHeight() == "150 mm")
+                    traySpec = "PUNCH TYPE CABLE TRAY FITTING, VERTICAL INSIDE BEND, ALUMINUM ALLOY, ANODIZING, 100MM SIDE RAIL, 300MM BEND RADIUS, 90 DEGREE BEND, 600 MM";
+                if (cObject.getWidth() == "900 mm" && cObject.getHeight() == "150 mm")
+                    traySpec = "PUNCH TYPE CABLE TRAY FITTING, VERTICAL INSIDE BEND, ALUMINUM ALLOY, ANODIZING, 100MM SIDE RAIL, 300MM BEND RADIUS, 90 DEGREE BEND, 900 MM";
+            }
+            if (cObject.getType2() == "Vertical Outside Bend")
+            {
+                if (cObject.getWidth() == "300 mm" && cObject.getHeight() == "150 mm")
+                    traySpec = "PUNCH TYPE CABLE TRAY FITTING, VERTICAL OUTSIDE BEND, ALUMINUM ALLOY, ANODIZING, 100MM SIDE RAIL, 300MM BEND RADIUS, 45 DEGREE BEND, 300 MM";
+                if (cObject.getWidth() == "600 mm" && cObject.getHeight() == "150 mm")
+                    traySpec = "PUNCH TYPE CABLE TRAY FITTING, VERTICAL OUTSIDE BEND, ALUMINUM ALLOY, ANODIZING, 100MM SIDE RAIL, 300MM BEND RADIUS, 45 DEGREE BEND, 600 MM";
+                if (cObject.getWidth() == "900 mm" && cObject.getHeight() == "150 mm")
+                    traySpec = "PUNCH TYPE CABLE TRAY FITTING, VERTICAL OUTSIDE BEND, ALUMINUM ALLOY, ANODIZING, 100MM SIDE RAIL, 300MM BEND RADIUS, 45 DEGREE BEND, 900 MM";
+            }
+            if (cObject.getType2() == "Tee")
+            {
+                if (cObject.getWidth() == "300 mm" && cObject.getHeight() == "150 mm")
+                    traySpec = "PUNCH TYPE CABLE TRAY FITTING, HORIZONTAL TEE, ALUMINUM ALLOY, ANODIZING, 100MM SIDE RAIL, 300MM BEND";
+                if (cObject.getWidth() == "600 mm" && cObject.getHeight() == "150 mm")
+                    traySpec = "PUNCH TYPE CABLE TRAY FITTING, HORIZONTAL TEE, ALUMINUM ALLOY, ANODIZING, 100MM SIDE RAIL, 600MM BEND";
+                if (cObject.getWidth() == "900 mm" && cObject.getHeight() == "150 mm")
+                    traySpec = "PUNCH TYPE CABLE TRAY FITTING, HORIZONTAL TEE, ALUMINUM ALLOY, ANODIZING, 100MM SIDE RAIL, 900MM BEND";
+            }
+            if (cObject.getType2() == "Cross")
+            {
+                if (cObject.getWidth() == "300 mm" && cObject.getHeight() == "150 mm")
+                    traySpec = "PUNCH TYPE CABLE TRAY FITTING, HORIZONTAL CROSS, STEEL SHEET, HOT-DIP GALVANIZED, 120MM SIDE RAIL, 300MM BEND RADIUS, 300 MM";
+                if (cObject.getWidth() == "600 mm" && cObject.getHeight() == "150 mm")
+                    traySpec = "PUNCH TYPE CABLE TRAY FITTING, HORIZONTAL CROSS, STEEL SHEET, HOT-DIP GALVANIZED, 120MM SIDE RAIL, 300MM BEND RADIUS, 600 MM";
+                if (cObject.getWidth() == "900 mm" && cObject.getHeight() == "150 mm")
+                    traySpec = "PUNCH TYPE CABLE TRAY FITTING, HORIZONTAL CROSS, STEEL SHEET, HOT-DIP GALVANIZED, 120MM SIDE RAIL, 300MM BEND RADIUS, 900 MM";
+            }
+            if (cObject.getType2() == "Transition")
+            {
+                if (cObject.getWidth() == "300 mm" && cObject.getHeight() == "150 mm")
+                    traySpec = "PUNCH TYPE CABLE TRAY FITTING, RIGHT REDUCER, STEEL SHEET, HOT-DIP GALVANIZED, 120MM SIDE RAIL, 600X300 MM";
+                if (cObject.getWidth() == "600 mm" && cObject.getHeight() == "150 mm")
+                    traySpec = "PUNCH TYPE CABLE TRAY FITTING, RIGHT REDUCER, STEEL SHEET, HOT-DIP GALVANIZED, 120MM SIDE RAIL, 900X600 MM";
+                if (cObject.getWidth() == "900 mm" && cObject.getHeight() == "150 mm")
+                    traySpec = "PUNCH TYPE CABLE TRAY FITTING, RIGHT REDUCER, STEEL SHEET, HOT-DIP GALVANIZED, 120MM SIDE RAIL, 900X900 MM";
+            }
+
+
+
+            return traySpec;
         }
 
         // ====== it shall be changed in each case. =======
@@ -177,5 +257,5 @@ namespace RevitAppIN.Util
         */
     }
 
-    
+
 }

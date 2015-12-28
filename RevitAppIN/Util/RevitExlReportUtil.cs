@@ -5,6 +5,7 @@ using System.Text;
 using Excel = Microsoft.Office.Interop.Excel;
 using RevitAppIN.RevitObj;
 
+
 namespace RevitAppIN.Util
 {
     class WriteExlFromList
@@ -14,10 +15,64 @@ namespace RevitAppIN.Util
         public Excel.Application xlApp;
         public Excel.Workbook xlWorkBook;
         public Excel.Worksheet xlWorkSheet;
+        public Excel.Worksheet xlWorkSheet2;
         List<RevitTray> TrayList;
         private double totalLength = 0;
         private List<TrayTotalLength> TotLengList;
+        private List<TrayFittingTotal> TotFitList = new List<TrayFittingTotal>();
 
+        private List<TrayFittingTotal> subCalTotalFitting(List<RevitTray> TrayList, List<TrayFittingTotal> resList, string calType)
+        {
+            foreach (RevitTray item in TrayList)
+            {
+                if (item.type == calType)
+                {
+                    if (resList.Any())
+                    {
+                        foreach (TrayFittingTotal item2 in resList)
+                        {
+                            if ((item2.width == item.width) && (item2.height == item.height))
+                            {
+                                item2.amount += 1;
+                                break;
+                            }
+                            else if (item2.GetHashCode() == resList.Last().GetHashCode())
+                            {
+                                resList.Add(new TrayFittingTotal { type = item.type2, width = item.width, height = item.height, amount = 1, description = item.description });
+                                break;
+                            }
+                            else
+                            {
+                                continue;
+                            }
+
+                        }
+                    }
+                    else
+                    {
+                        resList.Add(new TrayFittingTotal { type = item.type2, width = item.width, height = item.height, amount = 1, description = item.description });
+                    }
+
+                }
+            }
+
+            return resList;
+        }
+
+
+        public List<TrayFittingTotal> calTotalFitting(List<RevitTray> TrayList)
+        {
+            List<TrayFittingTotal> resList = new List<TrayFittingTotal>();
+
+            resList = subCalTotalFitting(TrayList, resList, "Elbow");
+            //resList = subCalTotalFitting(TrayList, resList, "Tee");
+            //resList = subCalTotalFitting(TrayList, resList, "Transition");
+            //resList = subCalTotalFitting(TrayList, resList, "Vertical Inside Bend");
+            //resList = subCalTotalFitting(TrayList, resList, "Vertical Outside Bend");
+
+
+            return resList;
+        }
 
         public List<TrayTotalLength> calTotalLength(List<RevitTray> TrayList)
         {
@@ -31,22 +86,26 @@ namespace RevitAppIN.Util
                     {
                         foreach (TrayTotalLength item2 in resList)
                         {
-                            if (item2.width == item.width && item2.height == item.height)
+                            if ((item2.width == item.width) && (item2.height == item.height))
                             {
                                 item2.totalLength += Convert.ToDouble(item.length);
                                 break;
                             }
+                            else if (item2.GetHashCode() == resList.Last().GetHashCode())
+                            {
+                                resList.Add(new TrayTotalLength { type = item.type2, width = item.width, height = item.height, totalLength = Convert.ToDouble(item.length), description = item.description });
+                                break;
+                            }
                             else
                             {
-                                resList.Add(new TrayTotalLength { width = item.width, height = item.height, totalLength = Convert.ToDouble(item.length) });
-                                break;
+                                continue;
                             }
 
                         }
                     }
                     else
                     {
-                        resList.Add(new TrayTotalLength { width = item.width, height = item.height, totalLength = Convert.ToDouble(item.length) });
+                        resList.Add(new TrayTotalLength { type = item.type2, width = item.width, height = item.height, totalLength = Convert.ToDouble(item.length), description = item.description });
                     }
 
                 }
@@ -69,31 +128,86 @@ namespace RevitAppIN.Util
 
 
             TotLengList = calTotalLength(TrayList);
+            //TotFitList = calTotalFitting(TrayList);
+            var types_without_tray = from fit in TrayList
+                                     where fit.type != "Cable Trays"
+                                     select fit;
+
+            var types = from fit in TrayList
+                        group fit by new { fit.type2 };
+
+
+
+            foreach (var typ in types)
+            {
+                var outputs = from fit in TrayList
+                              where fit.type2 == typ.Key.type2
+                              select fit;
+
+                int amount = 0;
+                string _type = "";
+                string _width = "";
+                string _height = "";
+                string _description = "";
+                if (typ.Key.type2 == "Cable Tray") continue;
+                foreach (var item in outputs)
+                {
+                    amount++;
+                    _type = item.type2;
+                    _width = item.width;
+                    _height = item.height;
+                    _description = item.description;
+                }
+
+                TotFitList.Add(new TrayFittingTotal() { type = _type, width = _width, height = _height, amount = amount, description = _description });
+
+
+            }
+
+
         }
 
         public void writeList2() // for export total length according to different size tray.
         {
-            xlWorkSheet = xlWorkBook.Worksheets.Add();
-            xlWorkSheet = xlWorkBook.Worksheets.get_Item(2);
-            xlWorkSheet.Select();
+
+            xlWorkSheet2.Select();
             string id = "A1";
-            Excel.Range rng = xlWorkSheet.get_Range(id, id);
+            Excel.Range rng = xlWorkSheet2.get_Range(id, id);
             rng.Select();
             int i = 1;
+
 
             foreach (TrayTotalLength tray in TotLengList)
             {
                 if (i == 1) // Report title
                 {
-                    rng[i, 1].Value = "Width";
-                    rng[i, 2].Value = "Heiht";
-                    rng[i, 3].Value = "Total Length";
+                    rng[i, 1].Value = "Type";
+                    rng[i, 2].Value = "Width";
+                    rng[i, 3].Value = "Height";
+                    rng[i, 4].Value = "Total Length";
+                    rng[i, 5].Value = "PC";
+                    rng[i, 6].Value = "Description";
                     i++;
                 }
-                rng[i, 1].Value = tray.width;
-                rng[i, 2].Value = tray.height;
-                rng[i, 3].Value = tray.totalLength;
+                rng[i, 1].Value = tray.type;
+                rng[i, 2].Value = tray.width;
+                rng[i, 3].Value = tray.height;
+                rng[i, 4].Value = tray.totalLength;
+                rng[i, 6].Value = tray.description;
+                i++;
             }
+
+            foreach (TrayFittingTotal fitting in TotFitList)
+            {
+                rng[i, 1].Value = fitting.type;
+                rng[i, 2].Value = fitting.width;
+                rng[i, 3].Value = fitting.height;
+                rng[i, 5].Value = fitting.amount;
+                rng[i, 6].Value = fitting.description;
+
+                i++;
+            }
+
 
         }
 
@@ -120,6 +234,7 @@ namespace RevitAppIN.Util
                     rng[i, 4].Value = "Height";
                     rng[i, 5].Value = "Length";
                     rng[i, 6].Value = "Tray Type";
+                    rng[i, 7].Value = "Length2";
                     i++;
                 }
                 rng[i, 1].Value = item.objName;
@@ -136,11 +251,13 @@ namespace RevitAppIN.Util
                 }
 
                 rng[i, 6].Value = item.type2;
+                rng[i, 7].Value = item.length;
                 i++;
             }
 
             rng[i + 2, 5].Value = "Total Length";
             rng[i + 2, 6].Value = totalLength.ToString() + " mm";
+            xlWorkSheet2 = xlWorkBook.Worksheets.Add(misValue, xlWorkSheet, misValue, misValue);
             writeList2();
 
 
@@ -152,6 +269,8 @@ namespace RevitAppIN.Util
             finProg();
 
         }
+
+        //set up the sheet format
         private void setShtFormat()
         {
             Excel.Range rng = xlWorkSheet.get_Range("A1", "A6");

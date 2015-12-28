@@ -14,7 +14,7 @@ namespace RevitAppIN.RevitObj
         {
             return width;
         }
-        
+
 
     }
 
@@ -27,12 +27,40 @@ namespace RevitAppIN.RevitObj
         public string width { get; set; }
         public string height { get; set; }
         public string length { get; set; }
+        public string description { get; set; }
+
+        public List<string> getInfo()
+        {
+            List<string> returnList = new List<string>() { type2, width, height, length, description};
+            return returnList;
+        }
     }
 
     public class TrayTotalLength
     {
+        public string type { get; set; }
         public string width { get; set; }
         public string height { get; set; }
         public double totalLength { get; set; }
+        public string description { get; set; }
     }
+    public class TrayFittingTotal
+    {
+        public string type { get; set; }
+        public string width { get; set; }
+        public string height { get; set; }
+        public int amount { get; set; }
+        public string description { get; set; }
+
+    }
+
+
+    public class TraySpec
+    {
+        public string width { get; set; }
+        public string height { get; set; }
+        public string description { get; set; }
+    }
+
+    
 }

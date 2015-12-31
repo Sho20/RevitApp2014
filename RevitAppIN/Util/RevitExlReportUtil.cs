@@ -93,7 +93,7 @@ namespace RevitAppIN.Util
                             }
                             else if (item2.GetHashCode() == resList.Last().GetHashCode())
                             {
-                                resList.Add(new TrayTotalLength { type = item.type2, width = item.width, height = item.height, totalLength = Convert.ToDouble(item.length), description = item.description });
+                                resList.Add(new TrayTotalLength { type = item.type2, width = item.width, height = item.height, totalLength = Convert.ToDouble(item.length), description = item.description, commodity = item.commodity });
                                 break;
                             }
                             else
@@ -105,7 +105,7 @@ namespace RevitAppIN.Util
                     }
                     else
                     {
-                        resList.Add(new TrayTotalLength { type = item.type2, width = item.width, height = item.height, totalLength = Convert.ToDouble(item.length), description = item.description });
+                        resList.Add(new TrayTotalLength { type = item.type2, width = item.width, height = item.height, totalLength = Convert.ToDouble(item.length), description = item.description, commodity = item.commodity });
                     }
 
                 }
@@ -149,6 +149,7 @@ namespace RevitAppIN.Util
                 string _width = "";
                 string _height = "";
                 string _description = "";
+                string _commodity = "";
                 if (typ.Key.type2 == "Cable Tray") continue;
                 foreach (var item in outputs)
                 {
@@ -157,9 +158,10 @@ namespace RevitAppIN.Util
                     _width = item.width;
                     _height = item.height;
                     _description = item.description;
+                    _commodity = item.commodity;
                 }
 
-                TotFitList.Add(new TrayFittingTotal() { type = _type, width = _width, height = _height, amount = amount, description = _description });
+                TotFitList.Add(new TrayFittingTotal() { type = _type, width = _width, height = _height, amount = amount, description = _description, commodity = _commodity });
 
 
             }
@@ -184,15 +186,16 @@ namespace RevitAppIN.Util
                     rng[i, 1].Value = "Type";
                     rng[i, 2].Value = "Width";
                     rng[i, 3].Value = "Height";
-                    rng[i, 4].Value = "Total Length";
-                    rng[i, 5].Value = "PC";
+                    rng[i, 4].Value = "Qty";
+                    rng[i, 5].Value = "Commodity Code";
                     rng[i, 6].Value = "Description";
                     i++;
                 }
                 rng[i, 1].Value = tray.type;
                 rng[i, 2].Value = tray.width;
                 rng[i, 3].Value = tray.height;
-                rng[i, 4].Value = tray.totalLength;
+                rng[i, 4].Value = tray.totalLength + " mm";
+                rng[i, 5].Value = tray.commodity;
                 rng[i, 6].Value = tray.description;
                 i++;
             }
@@ -202,7 +205,8 @@ namespace RevitAppIN.Util
                 rng[i, 1].Value = fitting.type;
                 rng[i, 2].Value = fitting.width;
                 rng[i, 3].Value = fitting.height;
-                rng[i, 5].Value = fitting.amount;
+                rng[i, 4].Value = fitting.amount;
+                rng[i, 5].Value = fitting.commodity;
                 rng[i, 6].Value = fitting.description;
 
                 i++;
@@ -214,8 +218,9 @@ namespace RevitAppIN.Util
         public void writeList()
         {
             xlApp = new Excel.Application();
-            //xlWorkBook = xlApp.Workbooks.Open(filePath);
-            xlWorkBook = xlApp.Workbooks.Add();
+            string temp_filePath = "D:\\Desktop\\下半年\\template.xlsx";
+            xlWorkBook = xlApp.Workbooks.Open(@temp_filePath);
+            //xlWorkBook = xlApp.Workbooks.Add();
             xlWorkSheet = xlWorkBook.Worksheets.get_Item(1);
             xlWorkSheet.Select();
             string id = "A1";
@@ -257,12 +262,14 @@ namespace RevitAppIN.Util
 
             rng[i + 2, 5].Value = "Total Length";
             rng[i + 2, 6].Value = totalLength.ToString() + " mm";
-            xlWorkSheet2 = xlWorkBook.Worksheets.Add(misValue, xlWorkSheet, misValue, misValue);
+            //xlWorkSheet2 = xlWorkBook.Worksheets.Add(misValue, xlWorkSheet, misValue, misValue);
+            xlWorkSheet2 = xlWorkBook.Worksheets.get_Item(2);
             writeList2();
 
 
 
             setShtFormat();
+            //setShtBorder(i, 7);
             xlWorkBook.SaveAs(filePath, misValue, misValue, misValue, misValue, misValue, Excel.XlSaveAsAccessMode.xlNoChange, misValue, misValue, misValue, misValue, misValue);
             xlWorkBook.Close(true, misValue, misValue);
             xlApp.Quit();
@@ -270,6 +277,24 @@ namespace RevitAppIN.Util
 
         }
 
+        private void setShtBorder(int i, int colCount)
+        {
+            string col = (char)(colCount + 64) + i.ToString();
+            Excel.Range rng = xlWorkSheet.get_Range("A1", col);
+            //rng.BorderAround2(Excel.XlLineStyle.xlContinuous, Excel.XlBorderWeight.xlThin, Excel.XlColorIndex.xlColorIndexAutomatic, null);
+            
+            
+            
+        
+        }
+        private void AllBorders(Excel.Borders _borders)
+        {
+            _borders[Excel.XlBordersIndex.xlEdgeLeft].LineStyle = Excel.XlLineStyle.xlContinuous;
+            _borders[Excel.XlBordersIndex.xlEdgeRight].LineStyle = Excel.XlLineStyle.xlContinuous;
+            _borders[Excel.XlBordersIndex.xlEdgeTop].LineStyle = Excel.XlLineStyle.xlContinuous;
+            _borders[Excel.XlBordersIndex.xlEdgeBottom].LineStyle = Excel.XlLineStyle.xlContinuous;
+            
+        }
         //set up the sheet format
         private void setShtFormat()
         {
@@ -281,6 +306,9 @@ namespace RevitAppIN.Util
             rng[1, 4].ColumnWidth = 9.38;
             rng[1, 5].ColumnWidth = 11.88;
             rng[1, 6].ColumnWidth = 11.88;
+
+            //rng.BorderAround2(Excel.XlLineStyle.xlContinuous, Excel.XlBorderWeight.xlThin, Excel.XlColorIndex.xlColorIndexAutomatic, null);
+            
         }
 
         private void finProg() // for clear Excel applicatin completely

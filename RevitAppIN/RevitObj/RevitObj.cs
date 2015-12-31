@@ -28,6 +28,7 @@ namespace RevitAppIN.RevitObj
         public string height { get; set; }
         public string length { get; set; }
         public string description { get; set; }
+        public string commodity { get; set; }
 
         public List<string> getInfo()
         {
@@ -43,6 +44,7 @@ namespace RevitAppIN.RevitObj
         public string height { get; set; }
         public double totalLength { get; set; }
         public string description { get; set; }
+        public string commodity { get; set; }
     }
     public class TrayFittingTotal
     {
@@ -51,6 +53,7 @@ namespace RevitAppIN.RevitObj
         public string height { get; set; }
         public int amount { get; set; }
         public string description { get; set; }
+        public string commodity { get; set; }
 
     }
 

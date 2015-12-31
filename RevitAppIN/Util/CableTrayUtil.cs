@@ -141,7 +141,85 @@ namespace RevitAppIN.Util
 
 
 
+        public static string getCommodity(this Element cObject)
+        {
+            string commodity = "null";
 
+            if (cObject.getType2() == "Cable Tray")
+            {
+                if (cObject.getWidth() == "300 mm" && cObject.getHeight() == "150 mm")
+                    commodity = "XEKAAAJ0-M300";
+                if (cObject.getWidth() == "600 mm" && cObject.getHeight() == "150 mm")
+                    commodity = "XEKAAAJ0-M600";
+                if (cObject.getWidth() == "900 mm" && cObject.getHeight() == "150 mm")
+                    commodity = "XEKAAAJ0-M900";
+            }
+            if (cObject.getType2() == "Elbow")
+            {
+                if (cObject.getWidth() == "300 mm" && cObject.getHeight() == "150 mm")
+                    commodity = "XELBAAJC40-M300";
+                if (cObject.getWidth() == "600 mm" && cObject.getHeight() == "150 mm")
+                    commodity = "XELBAAJC40-M600";
+                if (cObject.getWidth() == "900 mm" && cObject.getHeight() == "150 mm")
+                    commodity = "XELBAAJC40-M900";
+            }
+            if (cObject.getType2() == "Vertical Inside Bend")
+            {
+                if (cObject.getWidth() == "300 mm" && cObject.getHeight() == "150 mm")
+                    commodity = "XELEAAJC40-M300";
+                if (cObject.getWidth() == "600 mm" && cObject.getHeight() == "150 mm")
+                    commodity = "XELEAAJC40-M600";
+                if (cObject.getWidth() == "900 mm" && cObject.getHeight() == "150 mm")
+                    commodity = "XELEAAJC40-M900";
+            }
+            if (cObject.getType2() == "Vertical Outside Bend")
+            {
+                if (cObject.getWidth() == "300 mm" && cObject.getHeight() == "150 mm")
+                    commodity = "XELFAAJC40-M300";
+                if (cObject.getWidth() == "600 mm" && cObject.getHeight() == "150 mm")
+                    commodity = "XELFAAJC40-M600";
+                if (cObject.getWidth() == "900 mm" && cObject.getHeight() == "150 mm")
+                    commodity = "XELFAAJC40-M900";
+            }
+            if (cObject.getType2() == "Tee")
+            {
+                if (cObject.getWidth() == "300 mm" && cObject.getHeight() == "150 mm")
+                    commodity = "XELCAAJC40-M300";
+                if (cObject.getWidth() == "600 mm" && cObject.getHeight() == "150 mm")
+                    commodity = "XELCAAJC40-M600";
+                if (cObject.getWidth() == "900 mm" && cObject.getHeight() == "150 mm")
+                    commodity = "XELCAAJC40-M900";
+            }
+            if (cObject.getType2() == "Cross")
+            {
+                if (cObject.getWidth() == "300 mm" && cObject.getHeight() == "150 mm")
+                    commodity = "XELDAAJC40-M300";
+                if (cObject.getWidth() == "600 mm" && cObject.getHeight() == "150 mm")
+                    commodity = "XELDAAJC40-M600";
+                if (cObject.getWidth() == "900 mm" && cObject.getHeight() == "150 mm")
+                    commodity = "XELDAAJC40-M900";
+            }
+            if (cObject.getType2() == "Transition")
+            {
+                if (cObject.getWidth() == "300 mm" && cObject.getHeight() == "150 mm")
+                    commodity = "XELHAAJC40-M300";
+                if (cObject.getWidth() == "600 mm" && cObject.getHeight() == "150 mm")
+                    commodity = "XELHAAJC40-M600";
+                if (cObject.getWidth() == "900 mm" && cObject.getHeight() == "150 mm")
+                    commodity = "XELHAAJC40-M900";
+            }
+
+
+            return commodity;
+        }
+
+        //// another method to get the part description.
+        //public static string getTrayDescription(string commodity)
+        //{
+        //    string returnValue = "null";
+
+        //    return returnValue;
+        //}
 
         // Get the description by using this mehtod for now, we should build a database to search from for furture work.
         public static string getTraySpec(this Element cObject)

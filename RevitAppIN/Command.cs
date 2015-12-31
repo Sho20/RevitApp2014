@@ -86,17 +86,23 @@ namespace RevitAppIN
          
             //***====================================================== ALL selection
             Autodesk.Revit.DB.Document doc = commandData.Application.ActiveUIDocument.Document;
-            FilteredElementCollector elemTypeCtor = (new FilteredElementCollector(doc)).WhereElementIsElementType();
-            FilteredElementCollector notElemTypeCtor = (new FilteredElementCollector(doc)).WhereElementIsNotElementType();
-            FilteredElementCollector allElementCtor = elemTypeCtor.UnionWith(notElemTypeCtor);
-            //ICollection<Element> ALLfounds = allElementCtor.ToElements();
-            ICollection<Element> ALLfounds = elemTypeCtor.ToElements();
+            //FilteredElementCollector elemTypeCtor = (new FilteredElementCollector(doc)).WhereElementIsElementType();
+            //FilteredElementCollector notElemTypeCtor = (new FilteredElementCollector(doc)).WhereElementIsNotElementType();
+            //FilteredElementCollector allElementCtor = elemTypeCtor.UnionWith(notElemTypeCtor);
+            //ICollection<Element> ALLfounds = allElementCtor.ToElements();            
+            
+            // selection by hand
+            //ElementSet selection = commandData.Application.ActiveUIDocument.Selection.Elements;
+            FilteredElementCollector selectionByView = new FilteredElementCollector(doc, doc.ActiveView.Id);
+            
+                
 
-            ElementSet selection = commandData.Application.ActiveUIDocument.Selection.Elements;
 
             //***======================================================
             ArrayList objs = new ArrayList();
-            foreach (Element element in selection)
+            //foreach (Element element in ALLfounds)
+            //foreach (Element element in selection)
+            foreach (Element element in selectionByView)
             {
                 if (element == null) 
                     continue;
